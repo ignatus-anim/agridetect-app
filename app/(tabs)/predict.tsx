@@ -6,37 +6,21 @@ import ImagePicker, { launchCamera, launchImageLibrary, ImagePickerResponse, Cam
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { Link } from 'expo-router';
 
 
-// Importing crop images dynamically
-const appleImage = require('@/assets/photos/apple.jpeg');
-const bananaImage = require('@/assets/photos/banana.jpeg');
+// Importing crop images 
 const cornImage = require('@/assets/photos/corn.jpeg');
-const cherryImage = require('@/assets/photos/cherry.jpeg');
-const grapeImage = require('@/assets/photos/grape.jpeg');
-const peachImage = require('@/assets/photos/peach.jpeg');
-const potatoImage = require('@/assets/photos/potato.jpeg');
-const mangoImage = require('@/assets/photos/mango.jpeg');
-const orangeImage = require('@/assets/photos/orange.jpeg');
 const tomatoImage = require('@/assets/photos/tomato.jpeg');
 const pepperImage = require('@/assets/photos/pepper.jpeg');
-const strawberryImage = require('@/assets/photos/strawberry.jpeg');
-const riceImage = require('@/assets/photos/rice.jpeg');
+
 
 const crops = [
-  { name: 'Apple', image: appleImage },
-  { name: 'Banana', image: bananaImage },
+
   { name: 'Corn', image: cornImage },
-  { name: 'Cherry', image: cherryImage },
-  { name: 'Grape', image: grapeImage },
-  { name: 'Peach', image: peachImage },
-  { name: 'Potato', image: potatoImage },
-  { name: 'Mango', image: mangoImage },
-  { name: 'Orange', image: orangeImage },
   { name: 'Tomato', image: tomatoImage },
   { name: 'Pepper', image: pepperImage },
-  { name: 'Strawberry', image: strawberryImage },
-  { name: 'Rice', image: riceImage },
+
 ];
 
 export default function PredictionScreen() {
@@ -48,6 +32,10 @@ export default function PredictionScreen() {
     // Handle press for each crop button
     setSelectedCrop(cropName);
     setSelectedImage(null); // Clear previously selected image if any
+
+    
+
+
   };
 
 // Function to handle camera button press
@@ -98,7 +86,7 @@ const handleUploadPress = () => {
 
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#021f01', dark: '#021f01' }}
+      headerBackgroundColor={{ light: '#421d03', dark: '#421d03' }}
       headerImage={<Ionicons size={310} name="stats-chart" style={styles.headerImage} />}>
 
       <ThemedView style={styles.titleContainer}>
@@ -108,6 +96,12 @@ const handleUploadPress = () => {
             {/* Crop Selection Buttons */}
       <View style={styles.container}>
         {crops.map((crop, index) => (
+          <Link
+          href={{
+            pathname: '/predict/[id]',
+            params: {id: crop.name}
+          }}
+          >
           <TouchableOpacity
             key={index}
             style={[styles.button, selectedCrop === crop.name && styles.selectedButton]}
@@ -115,11 +109,12 @@ const handleUploadPress = () => {
           >
             <Image source={crop.image} style={styles.image} />
           </TouchableOpacity>
+          </Link>
         ))}
       </View>
 
 
-          {/* Action Buttons for Camera and Upload */}
+          {/* Action Buttons for Camera and Upload
       <View style={styles.actionButtonsContainer}>
         <TouchableOpacity style={styles.actionButton} onPress={handleCameraPress}>
           <Ionicons name="camera" size={24} color="black" />
@@ -129,7 +124,7 @@ const handleUploadPress = () => {
           <Ionicons name="cloud-upload" size={24} color="black" />
           <ThemedText style={styles.actionButtonText}>Upload Image</ThemedText>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
 
 
@@ -180,7 +175,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
     headerImage: {
-    color: '#8f1603',
+    color: '#023b11',
     bottom: -90,
     left: -35,
     position: 'absolute',

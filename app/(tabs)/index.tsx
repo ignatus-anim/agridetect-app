@@ -16,34 +16,26 @@ export default function HomeScreen() {
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Osei is the Goat!</ThemedText>
+        <ThemedText type="title">Welcome to AgriDetect</ThemedText>
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
+      <ThemedText>Our Mission is to help in identifying plant diseases efficiently. Upload an image of a plant, and our system will analyze it to detect any disease in it</ThemedText>
+        <ThemedText type="subtitle">How It Works</ThemedText>
         <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
+        Please go to the Predict and upload an image of a plant showing signs of disease. Our system will analyze the image using advanced algorithms to identify potential diseases. You can then view the results and receive recommendations for further action.
         </ThemedText>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
+        <ThemedText type="subtitle">Why Choose Us</ThemedText>
         <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
+        Our system uses advanced machine learning for precise disease detection, featuring a user-friendly interface for a seamless experience. It delivers results within seconds, ensuring fast decision-making.
         </ThemedText>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
+        <ThemedText type="subtitle">Get Started</ThemedText>
         <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
+        Click on the <ThemedText type="defaultSemiBold">Predict</ThemedText> tab to upload an image and experience the power of our Crop Disease Recognition system
         </ThemedText>
       </ThemedView>
     </ParallaxScrollView>

@@ -1,0 +1,66 @@
+my-app/
+├── android/
+├── ios/
+├── src/
+│   ├── assets/
+│   ├── components/
+│   ├── navigation/
+│   ├── screens/
+│   ├── App.tsx
+│   └── index.ts
+├── node_modules/
+├── .gitignore
+├── app.json
+├── babel.config.js
+├── package.json
+└── tsconfig.json
+
+
+my-app/
+    app/
+        (tabs)/
+            _layout.tsx
+            about.tsx
+            index.tsx
+            predict.tsx
+        predict
+            [id].tsx
+        _layout.tsx
+        +html.tsx
+        +not-found.tsx
+    assets/
+        fonts/
+        images/
+        photos/
+    components/
+        _tests_/
+        navigation/
+        Collapsible.tsx
+        ExternalLink.tsx
+        HelloWave.tsx
+        ParrallaxScrollView.tsx
+        ThemedText.tsx
+        ThemedView.tsx
+    constants/
+        Colors.ts
+    hooks/
+        useColorScheme.ts
+        useColorScheme.web.ts
+        useThemeColor.ts
+    node_modules/
+    scripts/
+        reset-projects.js
+    .gitignore
+    app.json
+    babel.config.js
+    expo.env.d.ts
+    package-lock.json
+    package.json
+    READme.node_modules
+    tsconfig.json   
+
+
+
+
+            
+
