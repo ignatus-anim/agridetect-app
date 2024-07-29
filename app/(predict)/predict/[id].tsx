@@ -8,38 +8,20 @@ import {
   View,
   Alert,
 } from "react-native";
-import ImagePicker, {
+import {
   launchCamera,
   launchImageLibrary,
   ImagePickerResponse,
   CameraOptions,
-  MediaType,
 } from "react-native-image-picker";
 
-import { Stack } from "expo-router";
+
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { Link, useNavigation } from "expo-router";
+import { useNavigation } from "expo-router";
 import { useLocalSearchParams } from "expo-router";
 
-import axios from "axios";
-import { useTensorflowModel } from "react-native-fast-tflite";
-
-// Importing crop images dynamically
-const appleImage = require("@/assets/photos/apple.jpeg");
-const bananaImage = require("@/assets/photos/banana.jpeg");
-const cornImage = require("@/assets/photos/corn.jpeg");
-const cherryImage = require("@/assets/photos/cherry.jpeg");
-const grapeImage = require("@/assets/photos/grape.jpeg");
-const peachImage = require("@/assets/photos/peach.jpeg");
-const potatoImage = require("@/assets/photos/potato.jpeg");
-const mangoImage = require("@/assets/photos/mango.jpeg");
-const orangeImage = require("@/assets/photos/orange.jpeg");
-const tomatoImage = require("@/assets/photos/tomato.jpeg");
-const pepperImage = require("@/assets/photos/pepper.jpeg");
-const strawberryImage = require("@/assets/photos/strawberry.jpeg");
-const riceImage = require("@/assets/photos/rice.jpeg");
 
 export default function Details() {
   const { id } = useLocalSearchParams();
@@ -72,7 +54,16 @@ export default function Details() {
     });
   };
 
-  const [inference, setInference] = useState<null | string>(null);
+  interface Inference {
+    class: string
+    confidence: number
+    causes: string[]
+    recommended_solutions: string[]
+    recommended_pesticide: string[]
+
+  }
+  
+  const [inference, setInference] = useState<null | Inference>(null);
 
   // Function to handle image upload button press
   const handleUploadPress = () => {
@@ -90,7 +81,7 @@ export default function Details() {
         console.log("ImagePicker Error: ", response.errorMessage);
       } else if (response.assets && response.assets.length > 0) {
 
-        const plugin = useTensorflowModel(require(`assets/${id}.tflite`))
+        // const plugin = useTensorflowModel(require(`assets/${id}.tflite`))
 
         const inputData = {}
 
@@ -104,7 +95,7 @@ export default function Details() {
 
         formData.append("file", imageBlob, id as string);
         formData.append("crop", id as string);
-        fetch("http://127.0.0.1:8000/predict", {
+        fetch("https://plantdetection.onrender.com/predict", {
           method: "POST",
           body: formData,
         })
@@ -144,7 +135,29 @@ export default function Details() {
           <Ionicons name="cloud-upload" size={24} color="black" />
           <ThemedText style={styles.actionButtonText}>Upload Image</ThemedText>
         </TouchableOpacity>
-      <ThemedText>{JSON.stringify(inference)}</ThemedText>
+        {
+  inference ? (
+    <ThemedText>
+      <ThemedText style={{ fontWeight: 'bold' }}>Disease: </ThemedText>{inference.class}{"\n"}
+      <ThemedText style={{ fontWeight: 'bold' }}>Confidence: </ThemedText>{inference.confidence.toFixed(2)}%{"\n"}
+      <ThemedText style={{ fontWeight: 'bold' }}>Causes:{"\n"}</ThemedText>
+      {inference.causes.map((cause, index) => (
+        <ThemedText key={index}>- {cause}{"\n"}</ThemedText>
+      ))}
+      <ThemedText style={{ fontWeight: 'bold' }}>Recommended Solutions:{"\n"}</ThemedText>
+      {inference.recommended_solutions.map((solution, index) => (
+        <ThemedText key={index}>- {solution}{"\n"}</ThemedText>
+      ))}
+      <ThemedText style={{ fontWeight: 'bold' }}>Recommended Pesticide:{"\n"}</ThemedText>
+      {inference.recommended_pesticide.map((pesticide, index) => (
+        <ThemedText key={index}>- {pesticide}{"\n"}</ThemedText>
+      ))}
+    </ThemedText>
+  ) : (
+    <ThemedText>No data available</ThemedText>
+  )
+}
+
       </View>
     </ParallaxScrollView>
   );

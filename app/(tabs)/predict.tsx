@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet, Image,TouchableOpacity, Platform, View, Alert } from 'react-native';
-import ImagePicker, { launchCamera, launchImageLibrary, ImagePickerResponse, CameraOptions, MediaType } from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary, ImagePickerResponse, CameraOptions, MediaType } from 'react-native-image-picker';
 
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
@@ -95,37 +95,23 @@ const handleUploadPress = () => {
 
             {/* Crop Selection Buttons */}
       <View style={styles.container}>
-        {crops.map((crop, index) => (
-          <Link
-          href={{
-            pathname: '/predict/[id]',
-            params: {id: crop.name}
-          }}
-          >
-          <TouchableOpacity
-            key={index}
-            style={[styles.button, selectedCrop === crop.name && styles.selectedButton]}
-            onPress={() => handleCropPress(crop.name)}
-          >
-            <Image source={crop.image} style={styles.image} />
-          </TouchableOpacity>
-          </Link>
-        ))}
-      </View>
-
-
-          {/* Action Buttons for Camera and Upload
-      <View style={styles.actionButtonsContainer}>
-        <TouchableOpacity style={styles.actionButton} onPress={handleCameraPress}>
-          <Ionicons name="camera" size={24} color="black" />
-          <ThemedText style={styles.actionButtonText}>Use Camera</ThemedText>
+    {crops.map((crop, index) => (
+      <Link
+        key={crop.name} // Add the unique key prop here
+        href={{
+          pathname: '/predict/[id]',
+          params: { id: crop.name }
+        }}
+      >
+        <TouchableOpacity
+          style={[styles.button, selectedCrop === crop.name && styles.selectedButton]}
+          onPress={() => handleCropPress(crop.name)}
+        >
+          <Image source={crop.image} style={styles.image} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton} onPress={handleUploadPress}>
-          <Ionicons name="cloud-upload" size={24} color="black" />
-          <ThemedText style={styles.actionButtonText}>Upload Image</ThemedText>
-        </TouchableOpacity>
-      </View> */}
-
+      </Link>
+    ))}
+  </View>
 
 
     </ParallaxScrollView>
