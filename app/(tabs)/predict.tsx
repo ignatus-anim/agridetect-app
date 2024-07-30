@@ -1,173 +1,177 @@
-import React, { useState } from 'react';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image,TouchableOpacity, Platform, View, Alert } from 'react-native';
-import { launchCamera, launchImageLibrary, ImagePickerResponse, CameraOptions, MediaType } from 'react-native-image-picker';
+import React, { useState } from "react";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import {
+  StyleSheet,
+  Image,
+  Pressable,
+  Platform,
+  View,
+  Alert,
+} from "react-native";
+import {
+  launchCamera,
+  launchImageLibrary,
+  ImagePickerResponse,
+  CameraOptions,
+  MediaType,
+} from "react-native-image-picker";
 
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { Link } from 'expo-router';
+import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { Link } from "expo-router";
 
-
-// Importing crop images 
-const cornImage = require('@/assets/photos/corn.jpeg');
-const tomatoImage = require('@/assets/photos/tomato.jpeg');
-const pepperImage = require('@/assets/photos/pepper.jpeg');
-
+// Importing crop images
+const cornImage = require("@/assets/photos/corn.jpeg");
+const tomatoImage = require("@/assets/photos/tomato.jpeg");
+const pepperImage = require("@/assets/photos/pepper.jpeg");
 
 const crops = [
-
-  { name: 'Corn', image: cornImage },
-  { name: 'Tomato', image: tomatoImage },
-  { name: 'Pepper', image: pepperImage },
-
+  { name: "Corn", image: cornImage },
+  { name: "Tomato", image: tomatoImage },
+  { name: "Pepper", image: pepperImage },
 ];
 
 export default function PredictionScreen() {
-  
   const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
   const handleCropPress = (cropName: string) => {
+    console.log("Selected Crop: ", cropName);
     // Handle press for each crop button
     setSelectedCrop(cropName);
     setSelectedImage(null); // Clear previously selected image if any
-
-    
-
-
   };
 
-// Function to handle camera button press
-const handleCameraPress = () => {
-  const options: CameraOptions = {
-    mediaType: 'photo',
-    maxWidth: 800,
-    maxHeight: 800,
-    quality: 1,
+  // Function to handle camera button press
+  const handleCameraPress = () => {
+    const options: CameraOptions = {
+      mediaType: "photo",
+      maxWidth: 800,
+      maxHeight: 800,
+      quality: 1,
+    };
+
+    launchCamera(options, (response: ImagePickerResponse) => {
+      if (response.didCancel) {
+        console.log("User cancelled camera");
+      } else if (response.errorMessage) {
+        console.log("Camera Error: ", response.errorMessage);
+      } else if (response.assets && response.assets.length > 0) {
+        const uri = response.assets[0].uri;
+        setSelectedImage(uri ?? null); // Use nullish coalescing operator to handle undefined
+        setSelectedCrop(null); // Clear selected crop
+      }
+    });
   };
 
-  launchCamera(options, (response: ImagePickerResponse) => {
-    if (response.didCancel) {
-      console.log('User cancelled camera');
-    } else if (response.errorMessage) {
-      console.log('Camera Error: ', response.errorMessage);
-    } else if (response.assets && response.assets.length > 0) {
-      const uri = response.assets[0].uri;
-      setSelectedImage(uri ?? null); // Use nullish coalescing operator to handle undefined
-      setSelectedCrop(null); // Clear selected crop
-    }
-  });
-};
+  // Function to handle image upload button press
+  const handleUploadPress = () => {
+    const options: CameraOptions = {
+      mediaType: "photo",
+      maxWidth: 800,
+      maxHeight: 800,
+      quality: 1,
+    };
 
-// Function to handle image upload button press
-const handleUploadPress = () => {
-  const options: CameraOptions = {
-    mediaType: 'photo',
-    maxWidth: 800,
-    maxHeight: 800,
-    quality: 1,
+    launchImageLibrary(options, (response: ImagePickerResponse) => {
+      if (response.didCancel) {
+        console.log("User cancelled image picker");
+      } else if (response.errorMessage) {
+        console.log("ImagePicker Error: ", response.errorMessage);
+      } else if (response.assets && response.assets.length > 0) {
+        const uri = response.assets[0].uri;
+        setSelectedImage(uri ?? null); // Use nullish coalescing operator to handle undefined
+        setSelectedCrop(null); // Clear selected crop
+      }
+    });
   };
-
-  launchImageLibrary(options, (response: ImagePickerResponse) => {
-    if (response.didCancel) {
-      console.log('User cancelled image picker');
-    } else if (response.errorMessage) {
-      console.log('ImagePicker Error: ', response.errorMessage);
-    } else if (response.assets && response.assets.length > 0) {
-      const uri = response.assets[0].uri;
-      setSelectedImage(uri ?? null); // Use nullish coalescing operator to handle undefined
-      setSelectedCrop(null); // Clear selected crop
-    }
-  });
-};
-
-
 
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#421d03', dark: '#421d03' }}
-      headerImage={<Ionicons size={310} name="stats-chart" style={styles.headerImage} />}>
-
+      headerBackgroundColor={{ light: "#421d03", dark: "#421d03" }}
+      headerImage={
+        <Ionicons size={310} name="stats-chart" style={styles.headerImage} />
+      }
+    >
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Disease Prediction</ThemedText>
       </ThemedView>
 
-            {/* Crop Selection Buttons */}
+      {/* Crop Selection Buttons */}
       <View style={styles.container}>
-    {crops.map((crop, index) => (
-      <Link
-        key={crop.name} // Add the unique key prop here
-        href={{
-          pathname: '/predict/[id]',
-          params: { id: crop.name }
-        }}
-      >
-        <TouchableOpacity
-          style={[styles.button, selectedCrop === crop.name && styles.selectedButton]}
+        {crops.map((crop, index) => (
+          <Link
           onPress={() => handleCropPress(crop.name)}
-        >
-          <Image source={crop.image} style={styles.image} />
-        </TouchableOpacity>
-      </Link>
-    ))}
-  </View>
-
-
+            key={crop.name} // Add the unique key prop here
+            href={{
+              pathname: "/predict/[id]",
+              params: { id: crop.name },
+            }}
+          >
+            <Pressable
+              style={[
+                styles.button,
+                selectedCrop === crop.name && styles.selectedButton,
+              ]}
+            >
+              <Image source={crop.image} style={styles.image} />
+            </Pressable>
+          </Link>
+        ))}
+      </View>
     </ParallaxScrollView>
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    justifyContent: "center",
     padding: 10,
   },
   button: {
     width: 80,
     height: 80,
     borderRadius: 50,
-    overflow: 'hidden',
+    overflow: "hidden",
     margin: 10,
   },
   selectedButton: {
     borderWidth: 2,
-    borderColor: '#3498db',
+    borderColor: "#3498db",
   },
   image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   actionButtonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
     marginTop: 20,
   },
   actionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#3498db',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#3498db",
     padding: 10,
     borderRadius: 5,
   },
   actionButtonText: {
     marginLeft: 10,
-    color: 'white',
+    color: "white",
   },
-    headerImage: {
-    color: '#023b11',
+  headerImage: {
+    color: "#023b11",
     bottom: -90,
     left: -35,
-    position: 'absolute',
+    position: "absolute",
   },
   titleContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 8,
   },
 });

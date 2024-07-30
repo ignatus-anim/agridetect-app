@@ -3,7 +3,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import {
   StyleSheet,
   Image,
-  TouchableOpacity,
+  Pressable,
   Platform,
   View,
   Alert,
@@ -15,13 +15,11 @@ import {
   CameraOptions,
 } from "react-native-image-picker";
 
-
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useNavigation } from "expo-router";
 import { useLocalSearchParams } from "expo-router";
-
 
 export default function Details() {
   const { id } = useLocalSearchParams();
@@ -55,14 +53,13 @@ export default function Details() {
   };
 
   interface Inference {
-    class: string
-    confidence: number
-    causes: string[]
-    recommended_solutions: string[]
-    recommended_pesticide: string[]
-
+    class: string;
+    confidence: number;
+    causes: string[];
+    recommended_solutions: string[];
+    recommended_pesticide: string[];
   }
-  
+
   const [inference, setInference] = useState<null | Inference>(null);
 
   // Function to handle image upload button press
@@ -80,10 +77,9 @@ export default function Details() {
       } else if (response.errorMessage) {
         console.log("ImagePicker Error: ", response.errorMessage);
       } else if (response.assets && response.assets.length > 0) {
-
         // const plugin = useTensorflowModel(require(`assets/${id}.tflite`))
 
-        const inputData = {}
+        const inputData = {};
 
         const uri = response.assets[0].uri;
         const formData = new FormData();
@@ -119,45 +115,63 @@ export default function Details() {
         <ThemedText type="title">{id} Disease Prediction</ThemedText>
       </ThemedView>
 
-      {/* Action Buttons for Camera and Upload */}
-      <View style={styles.actionButtonsContainer}>
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={handleCameraPress}
-        >
-          <Ionicons name="camera" size={24} color="black" />
-          <ThemedText style={styles.actionButtonText}>Use Camera</ThemedText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={handleUploadPress}
-        >
-          <Ionicons name="cloud-upload" size={24} color="black" />
-          <ThemedText style={styles.actionButtonText}>Upload Image</ThemedText>
-        </TouchableOpacity>
-        {
-  inference ? (
-    <ThemedText>
-      <ThemedText style={{ fontWeight: 'bold' }}>Disease: </ThemedText>{inference.class}{"\n"}
-      <ThemedText style={{ fontWeight: 'bold' }}>Confidence: </ThemedText>{inference.confidence.toFixed(2)}%{"\n"}
-      <ThemedText style={{ fontWeight: 'bold' }}>Causes:{"\n"}</ThemedText>
-      {inference.causes.map((cause, index) => (
-        <ThemedText key={index}>- {cause}{"\n"}</ThemedText>
-      ))}
-      <ThemedText style={{ fontWeight: 'bold' }}>Recommended Solutions:{"\n"}</ThemedText>
-      {inference.recommended_solutions.map((solution, index) => (
-        <ThemedText key={index}>- {solution}{"\n"}</ThemedText>
-      ))}
-      <ThemedText style={{ fontWeight: 'bold' }}>Recommended Pesticide:{"\n"}</ThemedText>
-      {inference.recommended_pesticide.map((pesticide, index) => (
-        <ThemedText key={index}>- {pesticide}{"\n"}</ThemedText>
-      ))}
-    </ThemedText>
-  ) : (
-    <ThemedText>No data available</ThemedText>
-  )
-}
+      <View>
+        <View style={styles.actionButtonsContainer}>
+          <Pressable style={styles.actionButton} onPress={handleCameraPress}>
+            <Ionicons name="camera" size={24} color="black" />
+            <ThemedText style={styles.actionButtonText}>Use Camera</ThemedText>
+          </Pressable>
 
+          <Pressable style={styles.actionButton} onPress={handleUploadPress}>
+            <Ionicons name="cloud-upload" size={24} color="black" />
+            <ThemedText style={styles.actionButtonText}>
+              Upload Image
+            </ThemedText>
+          </Pressable>
+        </View>
+
+        <View style={{ display: "flex", alignItems: "center" }}>
+          {inference ? (
+            <ThemedText>
+              <ThemedText style={{ fontWeight: "bold" }}>Disease: </ThemedText>
+              {inference.class}
+              {"\n"}
+              <ThemedText style={{ fontWeight: "bold" }}>
+                Confidence:{" "}
+              </ThemedText>
+              {inference.confidence.toFixed(2)}%{"\n"}
+              <ThemedText style={{ fontWeight: "bold" }}>
+                Causes:{"\n"}
+              </ThemedText>
+              {inference.causes.map((cause, index) => (
+                <ThemedText key={index}>
+                  - {cause}
+                  {"\n"}
+                </ThemedText>
+              ))}
+              <ThemedText style={{ fontWeight: "bold" }}>
+                Recommended Solutions:{"\n"}
+              </ThemedText>
+              {inference.recommended_solutions.map((solution, index) => (
+                <ThemedText key={index}>
+                  - {solution}
+                  {"\n"}
+                </ThemedText>
+              ))}
+              <ThemedText style={{ fontWeight: "bold" }}>
+                Recommended Pesticide:{"\n"}
+              </ThemedText>
+              {inference.recommended_pesticide.map((pesticide, index) => (
+                <ThemedText key={index}>
+                  - {pesticide}
+                  {"\n"}
+                </ThemedText>
+              ))}
+            </ThemedText>
+          ) : (
+            <ThemedText>No data available</ThemedText>
+          )}
+        </View>
       </View>
     </ParallaxScrollView>
   );
