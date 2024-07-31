@@ -130,7 +130,7 @@ export default function Details() {
           </Pressable>
         </View>
 
-        <View style={{ display: "flex", alignItems: "center" }}>
+        {/* <View style={{ display: "flex", alignItems: "center" }}>
           {inference ? (
             <ThemedText>
               <ThemedText style={{ fontWeight: "bold" }}>Disease: </ThemedText>
@@ -171,7 +171,52 @@ export default function Details() {
           ) : (
             <ThemedText>No data available</ThemedText>
           )}
-        </View>
+        </View> */}
+        <View style={{ display: "flex", alignItems: "center" }}>
+            {inference ? (
+              inference.confidence < 80 ? (
+                <ThemedText style={{ color: "red", fontWeight: "bold" }}>
+                  Error: Confidence is below 80%. Please upload a clear image.
+                </ThemedText>
+              ) : (
+                <ThemedText>
+                  <ThemedText style={{ fontWeight: "bold" }}>Disease: </ThemedText>
+                  {inference.class}
+                  {"\n"}
+                  <ThemedText style={{ fontWeight: "bold" }}>Confidence: </ThemedText>
+                  {inference.confidence.toFixed(2)}%{"\n"}
+                  <ThemedText style={{ fontWeight: "bold" }}>Causes:{"\n"}</ThemedText>
+                  {inference.causes.map((cause, index) => (
+                    <ThemedText key={index}>
+                      - {cause}
+                      {"\n"}
+                    </ThemedText>
+                  ))}
+                  <ThemedText style={{ fontWeight: "bold" }}>
+                    Recommended Solutions:{"\n"}
+                  </ThemedText>
+                  {inference.recommended_solutions.map((solution, index) => (
+                    <ThemedText key={index}>
+                      - {solution}
+                      {"\n"}
+                    </ThemedText>
+                  ))}
+                  <ThemedText style={{ fontWeight: "bold" }}>
+                    Recommended Pesticide:{"\n"}
+                  </ThemedText>
+                  {inference.recommended_pesticide.map((pesticide, index) => (
+                    <ThemedText key={index}>
+                      - {pesticide}
+                      {"\n"}
+                    </ThemedText>
+                  ))}
+                </ThemedText>
+              )
+            ) : (
+              <ThemedText>No data available</ThemedText>
+            )}
+      </View>
+
       </View>
     </ParallaxScrollView>
   );
